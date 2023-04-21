@@ -1,0 +1,13 @@
+th {
+    cursor: pointer;
+}
+
+#dVilon {
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: .8;
+}

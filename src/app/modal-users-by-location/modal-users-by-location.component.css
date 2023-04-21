@@ -1,0 +1,28 @@
+#dModal2 {
+    width: 1200px;
+    min-height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -600px;
+    margin-top: -300px;
+    border: 2px solid blue;
+    border-radius: 20px;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.fa-close {
+    position: absolute;
+    left: 1150px;
+    top: 1px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+}
+
+

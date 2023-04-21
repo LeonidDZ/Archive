@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="btn-group" ngbDropdown class="dropdown">
+                <button type="button" ngbDropdownToggle class="btn btn-primary dropdown-toggle">
+                    Search by location
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <li *ngFor="let location of locations"><a ngbDropdownItem href="#" role="button" (click)="searchUsersByLocation(location)">{{location}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="tblUser" class="table table-striped table-bordered table-sm table-hover"
+    style="table-layout: fixed;width:100%;">
+    <thead>
+        <tr>
+            <th (click)="sortTable('fullName')">Full name</th>
+            <th (click)="sortTable('phoneNumber')">Pnone number</th>
+            <th (click)="sortTable('birthday')">Birthday</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users| orderBy: sort; let i = index">
+            <td>
+                {{user.fullName}}
+            </td>
+            <td>
+                {{user.phoneNumber}}
+            </td>
+            <td>
+                {{user.birthday}}
+            </td>
+            <td>
+                <button type="button" (click)="showUserDetailes(user)" class="btn btn-primary">Details</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div id="dVilon" #vilon (click)="hideModals()"></div>
+<app-modal *ngIf="showDetailes" [user]="selectedUser"></app-modal>
+<app-modal-users-by-location *ngIf="showUsersByLocation" [users]="selectedUsersByLocation"></app-modal-users-by-location>

@@ -1,0 +1,59 @@
+#dModal {
+    width: 1200px;
+    min-height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -600px;
+    margin-top: -300px;
+    border: 2px solid blue;
+    border-radius: 20px;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+#dLeft,
+#dCenter,
+#dRight {
+    min-height: 300px;
+    position: relative;
+    display: inline-block;
+}
+
+#dLeft {
+    width: 20%;
+}
+
+#dCenter {
+    width: 40%;
+    border-left: 1px solid blue;
+    border-right: 1px solid blue;
+}
+
+#dRight {
+    width: 40%;
+}
+
+.flexRow {
+    width: 100%;
+    align-content: space-between;
+}
+
+h4 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+}
+
+#tblCenter tr {
+    cursor: pointer;
+}
+
+.fa-close {
+    margin-top: -38px;
+    cursor: pointer;
+}
