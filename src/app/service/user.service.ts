@@ -71,7 +71,7 @@ export class UserService {
     setPagesQuantity() {
         this.pagesQuantity = Math.ceil(this.users.length / this.rowsPerPage);
         const pq = this.pagesQuantity;
-        const cp = this.currPage;
+        const cp = 0;
         this.pagesQuantityChanged.emit({ pq, cp });
     }
 
@@ -171,6 +171,7 @@ export class UserService {
     }
 
     fillCurrUsers() {
+        this.currPage = this.currPage > Object.keys(this.pagedUsers).length - 1 ? 0 : this.currPage;
         this.currUsers = this.pagedUsers[this.currPage];
     }
 }
