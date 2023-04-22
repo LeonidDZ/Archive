@@ -14,7 +14,6 @@
                     <thead>
                         <th>Car number</th>
                         <th>Users</th>
-                        <th>Location</th>
                         <th>Visit dates</th>
                         <th></th>
                     </thead>
@@ -27,9 +26,6 @@
                                 <div *ngFor="let userName of item.userNames; index as j">
                                     {{i===0?userName:''}}
                                 </div>
-                            </td>
-                            <td>
-                                {{i===0?item.locationLatLng:''}}
                             </td>
                             <td>
                                 <div *ngFor="let visitDate of item.visitDates">

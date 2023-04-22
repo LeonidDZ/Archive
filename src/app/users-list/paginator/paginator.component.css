@@ -1,0 +1,9 @@
+.no-padding {
+    padding: 0 !important;
+}
+
+.success{
+    background-color: #0D6EFD;
+    color: white;
+    border-radius: 5px;
+}

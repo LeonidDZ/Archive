@@ -1,13 +1,18 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-10">
+            <app-paginator></app-paginator>
+        </div>
+
+        <div class="col-md-2">
             <div class="btn-group" ngbDropdown class="dropdown">
                 <button type="button" ngbDropdownToggle class="btn btn-primary dropdown-toggle">
                     Search by location
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                    <li *ngFor="let location of locations"><a ngbDropdownItem href="#" role="button" (click)="searchUsersByLocation(location)">{{location}}</a></li>
+                    <li *ngFor="let location of locations"><a ngbDropdownItem href="#" role="button"
+                            (click)="searchUsersByLocation(location)">{{location}}</a></li>
                 </ul>
             </div>
         </div>
@@ -44,4 +49,5 @@
 
 <div id="dVilon" #vilon (click)="hideModals()"></div>
 <app-modal *ngIf="showDetailes" [user]="selectedUser"></app-modal>
-<app-modal-users-by-location *ngIf="showUsersByLocation" [users]="selectedUsersByLocation"></app-modal-users-by-location>
+<app-modal-users-by-location *ngIf="showUsersByLocation"
+    [users]="selectedUsersByLocation"></app-modal-users-by-location>
