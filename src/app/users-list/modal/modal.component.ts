@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
-import { User } from '../models/user.model';
-import { Car } from '../models/car.model';
-import { Location } from '../models/location.model';
-import { UserService } from '../service/user.service';
+import { User } from '../../models/user.model';
+import { Car } from '../../models/car.model';
+import { Location } from '../../models/location.model';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-modal',

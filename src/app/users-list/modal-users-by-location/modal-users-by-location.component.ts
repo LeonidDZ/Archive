@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from '../models/user.model';
-import { Car } from '../models/car.model';
-import { Location } from '../models/location.model';
-import { UserService } from '../service/user.service';
-import { CarLocationUsers } from '../models/car-location-users.model';
+import { User } from '../../models/user.model';
+import { Car } from '../../models/car.model';
+import { Location } from '../../models/location.model';
+import { UserService } from '../../service/user.service';
+import { CarLocationUsers } from '../../models/car-location-users.model';
 
 @Component({
   selector: 'app-modal-users-by-location',
@@ -12,7 +12,7 @@ import { CarLocationUsers } from '../models/car-location-users.model';
 })
 export class ModalUsersByLocationComponent implements OnInit {
 
-  @Input() users: User[];
+  private users: User[];
   public selectedLocation: string;
   public carLocationUsers: any;
   public keys: string[];
@@ -20,6 +20,7 @@ export class ModalUsersByLocationComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
+    this.users = this.userService.currUsers;
     this.fillCarLocationUsers();
   }
 

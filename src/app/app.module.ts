@@ -8,10 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
-import { ModalComponent } from './modal/modal.component';
+import { ModalComponent } from './users-list/modal/modal.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModalUsersByLocationComponent } from './modal-users-by-location/modal-users-by-location.component';
+import { ModalUsersByLocationComponent } from './users-list/modal-users-by-location/modal-users-by-location.component';
 import { PaginatorComponent } from './users-list/paginator/paginator.component';
 
 
