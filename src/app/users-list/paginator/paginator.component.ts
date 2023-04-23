@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/service/user.service';
 
 declare var $: any;
@@ -8,7 +9,7 @@ declare var $: any;
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.css']
 })
-export class PaginatorComponent implements OnInit, AfterViewInit {
+export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('rowsPerPageSelector') rowsPerPageSelector: ElementRef;
   public pagesQuantity: number = 5;
@@ -16,6 +17,7 @@ export class PaginatorComponent implements OnInit, AfterViewInit {
   public currPage: number = 0;
   public rowsPerPage: number = 10;
   private cookieName: string = 'savedRowsPerPageNumber';
+  private activatedPagesQuantityChanged: Subscription;
 
   constructor(
     private userService: UserService) { }
@@ -24,13 +26,18 @@ export class PaginatorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    this.userService.pagesQuantityChanged.subscribe((pq: number, cp: number) => {
+    this.activatedPagesQuantityChanged =
+    this.userService.pagesQuantityChanged.subscribe((pq: number) => {
       this.pagesQuantity = pq;
       this.rowsPerPage = this.userService.rowsPerPage;
       this.setRowsPerPage(this.rowsPerPage);
-      this.currPage = cp;
+      this.currPage = 0;
     });
     this.setCurrPage(this.userService.currPage);
+  }
+
+  ngOnDestroy(){
+    this.activatedPagesQuantityChanged.unsubscribe();
   }
 
   setRowsPerPage(evt: any) {

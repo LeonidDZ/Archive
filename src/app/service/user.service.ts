@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from "../models/user.model";
 import { Car } from '../models/car.model';
@@ -29,11 +30,11 @@ export class UserService {
     private cookieName: string = 'savedEntities';
     private savedEntities: SavedEntities;
 
-    public usersListChanged = new EventEmitter<User[]>();
-    public lightUsersListChanged = new EventEmitter<LightUser[]>();
-    public closeUsersListModal = new EventEmitter();
-    public closeUsersByLocationModal = new EventEmitter();
-    public pagesQuantityChanged = new EventEmitter();
+    public usersListChanged = new Subject<User[]>();
+    public lightUsersListChanged = new Subject<LightUser[]>();
+    public closeUsersListModal = new Subject<void>();
+    public closeUsersByLocationModal = new Subject<void>();
+    public pagesQuantityChanged = new Subject<number>();
 
     constructor(
         private http: HttpClient,
@@ -64,15 +65,14 @@ export class UserService {
         this.currPage = cp || cp === 0 ? cp : this.currPage;
         this.saveSavedEntities();
         this.fillCurrUsers();
-        this.usersListChanged.emit(this.currUsers);
+        this.usersListChanged.next(this.currUsers);
         this.setPagedUsers();
     }
 
     setPagesQuantity() {
         this.pagesQuantity = Math.ceil(this.users.length / this.rowsPerPage);
         const pq = this.pagesQuantity;
-        const cp = 0;
-        this.pagesQuantityChanged.emit({ pq, cp });
+        this.pagesQuantityChanged.next(pq);
     }
 
     setRowsPerPage(rpp: number) {
@@ -85,7 +85,7 @@ export class UserService {
         this.http.get<LightUser[]>(this.usersPath)
             .subscribe((data) => {
                 this.lightUsers = data;
-                this.lightUsersListChanged.emit(data);
+                this.lightUsersListChanged.next(data);
             },
                 (error) => {
                     console.log('Error: ', error);
@@ -159,7 +159,7 @@ export class UserService {
     setPagedUsers() {
         this.fillPagedUsers();
         this.fillCurrUsers();
-        this.usersListChanged.emit(this.currUsers);
+        this.usersListChanged.next(this.currUsers);
     }
 
     fillPagedUsers() {

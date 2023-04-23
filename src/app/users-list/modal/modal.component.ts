@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Car } from '../../models/car.model';
 import { Location } from '../../models/location.model';
@@ -21,12 +21,16 @@ export class ModalComponent implements OnInit {
     this.showLocations(firstCar);
   }
 
+  ngOnDestroy(): void {
+    
+  }
+
   showLocations(car: Car) {
     this.locations = car.locations;
   }
 
   closeModal(){
-    this.userService.closeUsersListModal.emit();
+    this.userService.closeUsersListModal.next();
   }
 
 }

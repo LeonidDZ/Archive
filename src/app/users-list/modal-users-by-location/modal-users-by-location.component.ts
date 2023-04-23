@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Car } from '../../models/car.model';
 import { Location } from '../../models/location.model';
@@ -25,7 +25,7 @@ export class ModalUsersByLocationComponent implements OnInit {
   }
 
   closeModal() {
-    this.userService.closeUsersListModal.emit();
+    this.userService.closeUsersListModal.next();
   }
 
   fillCarLocationUsers() {

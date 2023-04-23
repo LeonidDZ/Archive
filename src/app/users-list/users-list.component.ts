@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserService } from '../service/user.service';
 import { Location } from '../models/location.model';
@@ -11,7 +12,7 @@ import { Car } from '../models/car.model';
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.css']
 })
-export class UsersListComponent implements OnInit, AfterViewInit {
+export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public users: User[];
   public sort: string = '-fullName';
@@ -20,12 +21,17 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   public locations: string[] = [];
   public selectedUsersByLocation: User[] = [];
   public showUsersByLocation: boolean = false;
+  private activatedUsersListChanged: Subscription;
+  private activatedCloseUsersListModal: Subscription;
+  private activatedCloseUsersByLocationModal: Subscription;
+
   @ViewChild('vilon') vilon: ElementRef;
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.usersListChanged.subscribe(
+    this.activatedUsersListChanged = 
+     this.userService.usersListChanged.subscribe(
       (list: User[]) => {
         this.users = list;
         this.userService.locations.map((location: Location) => {
@@ -37,18 +43,25 @@ export class UsersListComponent implements OnInit, AfterViewInit {
       }
     );
 
+    this.activatedCloseUsersListModal =
     this.userService.closeUsersListModal.subscribe(() => {
       this.showDetailes = false;
       this.hideModals();
     });
 
     this.userService.closeUsersByLocationModal.subscribe(()=>{
-
+      this.activatedUsersListChanged
     })
   }
 
   ngAfterViewInit() {
     this.hideModals();
+  }
+
+  ngOnDestroy(){
+    this.activatedUsersListChanged.unsubscribe();
+    this.activatedCloseUsersListModal.unsubscribe();
+    this.activatedCloseUsersByLocationModal.unsubscribe();
   }
 
   showUserDetailes(user: User) {
