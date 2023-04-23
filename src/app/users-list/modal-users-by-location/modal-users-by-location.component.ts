@@ -18,6 +18,7 @@ export class ModalUsersByLocationComponent implements OnInit {
   public selected: string;
   public carLocationUsers: any;
   public keys: string[];
+  public bigImg: boolean = false;
 
   constructor(private userService: UserService) { }
 
@@ -28,6 +29,10 @@ export class ModalUsersByLocationComponent implements OnInit {
 
   closeModal() {
     this.userService.closeUsersListModal.next();
+  }
+
+  showBigImg(set: boolean){
+    this.bigImg = set;
   }
 
   fillCarLocationUsers() {
@@ -58,6 +63,6 @@ export class ModalUsersByLocationComponent implements OnInit {
     });
     this.keys = Object.keys(this.carLocationUsers);
     this.selectedLocation = this.carLocationUsers[this.keys[0]][0].locationLatLng;
-    this.selectedLocationImg =  this.carLocationUsers[this.keys[0]][0].locationImg;
+    this.selectedLocationImg = this.carLocationUsers[this.keys[0]][0].locationImg;
   }
 }

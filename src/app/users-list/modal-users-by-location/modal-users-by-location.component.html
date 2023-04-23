@@ -1,8 +1,7 @@
 <div id="dModal2">
-
     <div class="container">
         <i class="fa fa-close fa-2x col-md-1" (click)="closeModal()"></i>
-        
+
         <div class="row" style="width:100%">
             <div class="col-md-6 text-center">
                 <div class="row">
@@ -13,9 +12,10 @@
                         <div class="pull-left"><b>{{selectedLocation}}</b></div>
                     </div>
                 </div>
-                <br/>
-                <br/>
-                <img [src]="selectedLocationImg" alt="" class="img-responsive" style="max-height:200px" title="Image">
+                <br />
+                <br />
+                <img [src]="selectedLocationImg" alt="" class="img-responsive" style="max-height:200px"
+                    (mouseover)="showBigImg(true)">
             </div>
             <div class="col-md-6">
                 <div *ngFor="let key of keys; index as k">
@@ -47,4 +47,5 @@
             </div>
         </div>
     </div>
+    <img *ngIf="bigImg" [src]="selectedLocationImg" alt="" class="img-responsive big-img" (mouseout)="showBigImg(false)">
 </div>

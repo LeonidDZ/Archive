@@ -30,26 +30,40 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.activatedUsersListChanged = 
-     this.userService.usersListChanged.subscribe(
-      (list: User[]) => {
-        this.users = list;
-        this.userService.locations.map((location: Location) => {
-          if (this.locations.indexOf(location.locationLatLng) < 0) {
-            this.locations.push(location.locationLatLng);
+    this.activatedUsersListChanged =
+      this.userService.usersListChanged.subscribe(
+        (list: User[]) => {
+          if(!list){
+            return;
           }
-        });
-        this.locations.sort();
-      }
-    );
+          this.users = list;
+          this.locations = [];
+          let locs: string[] = [];
+          this.userService.locations.map((location: Location) => {
+            if (locs.indexOf(location.locationLatLng) < 0) {
+              locs.push(location.locationLatLng);
+            }
+          });
+          this.users.map((user: User) => {
+            user.cars.map((car: Car) => {
+              car.locations.map((loc: Location)=>{
+                if(locs.indexOf(loc.locationLatLng) !== -1 && this.locations.indexOf(loc.locationLatLng) === -1){
+                  this.locations.push(loc.locationLatLng);
+                }
+              })
+            })
+          });
+          this.locations.sort();
+        }
+      );
 
     this.activatedCloseUsersListModal =
-    this.userService.closeUsersListModal.subscribe(() => {
-      this.showDetailes = false;
-      this.hideModals();
-    });
+      this.userService.closeUsersListModal.subscribe(() => {
+        this.showDetailes = false;
+        this.hideModals();
+      });
 
-    this.userService.closeUsersByLocationModal.subscribe(()=>{
+    this.userService.closeUsersByLocationModal.subscribe(() => {
       this.activatedUsersListChanged
     })
   }
@@ -58,7 +72,7 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.hideModals();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.activatedUsersListChanged.unsubscribe();
     this.activatedCloseUsersListModal.unsubscribe();
     this.activatedCloseUsersByLocationModal.unsubscribe();
