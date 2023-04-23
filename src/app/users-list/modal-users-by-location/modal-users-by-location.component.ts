@@ -14,6 +14,8 @@ export class ModalUsersByLocationComponent implements OnInit {
 
   private users: User[];
   public selectedLocation: string;
+  public selectedLocationImg: string;
+  public selected: string;
   public carLocationUsers: any;
   public keys: string[];
 
@@ -56,5 +58,6 @@ export class ModalUsersByLocationComponent implements OnInit {
     });
     this.keys = Object.keys(this.carLocationUsers);
     this.selectedLocation = this.carLocationUsers[this.keys[0]][0].locationLatLng;
+    this.selectedLocationImg =  this.carLocationUsers[this.keys[0]][0].locationImg;
   }
 }
