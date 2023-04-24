@@ -63,7 +63,6 @@ export class UserService {
 
     setCurrPage(cp: number) {
         this.currPage = cp || cp === 0 ? cp : this.currPage;
-        this.saveSavedEntities();
         this.fillCurrUsers();
         this.usersListChanged.next(this.currUsers);
         this.setPagedUsers();
@@ -72,6 +71,7 @@ export class UserService {
     setPagesQuantity() {
         this.pagesQuantity = Math.ceil(this.users.length / this.rowsPerPage);
         const pq = this.pagesQuantity;
+        this.saveSavedEntities();
         this.pagesQuantityChanged.next(pq);
     }
 
