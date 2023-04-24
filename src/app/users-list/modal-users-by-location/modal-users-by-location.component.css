@@ -27,12 +27,20 @@ table {
 
 .big-img {
     position: fixed;
-    height: 80%;
+    height: 95%;
     width: auto;
-    top: 10%;
-    left: 10%;
+    top: 2%;
+    left: 2%;
+    border:2px solid blue;
+    border-radius: 15px;
+    background-color: white;
+    padding:10px;
 }
 
 img {
     cursor: pointer;
+    border:2px solid blue;
+    border-radius: 10px;
+    background-color: white;
+    padding:5px;
 }

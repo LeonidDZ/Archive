@@ -47,5 +47,10 @@
             </div>
         </div>
     </div>
-    <img *ngIf="bigImg" [src]="selectedLocationImg" alt="" class="img-responsive big-img" (mouseout)="showBigImg(false)">
+    <img 
+        *ngIf="bigImg" 
+        [src]="selectedLocationImg" 
+        alt="" 
+        class="img-responsive big-img" 
+        (mouseout)="showBigImg(false)">
 </div>
