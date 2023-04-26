@@ -54,7 +54,6 @@ export class ModalUsersByLocationComponent implements OnInit {
           this.carsUsersDates[loc.carNumber].users = [];
           this.carsUsersDates[loc.carNumber].dates = [];
         }
-        this.carsUsersDates.carNumber = loc.carNumber;
         this.carsUsersDates[loc.carNumber].dates.push(loc.dateTime);
       }
     })
