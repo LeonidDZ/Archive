@@ -4,9 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { User } from "../models/user.model";
 import { Car } from '../models/car.model';
 import { Location } from '../models/location.model';
-import { LightUser } from "../models/light-user.model";
 import { CookieService } from 'ngx-cookie';
 import { SavedEntities } from '../models/saved-entities.model';
+
+declare var $: any;
 
 @Injectable()
 export class UserService {
@@ -14,36 +15,35 @@ export class UserService {
     usersPath: string = '../assets/data/people.json';
     carsPath: string = '../assets/data/cars.json';
     locationsPath: string = '../assets/data/location.json';
+    public init: boolean = true;
     public pagedUsers: any = {};
     public users: User[] = [];
     public currUsers: User[] = [];
     public cars: Car[] = [];
     public locations: Location[] = [];
-    private lightUsers: LightUser[] = [];
     private usersChanged: boolean = false;
     private carsChanged: boolean = false;
     private locationsChanged: boolean = false;
     public rowsPerPage: number = 5;
     public currPage: number = 0;
-    private defaultRowsPerPage: number = 10;
     public pagesQuantity: number = 10;
     private cookieName: string = 'savedEntities';
     private savedEntities: SavedEntities;
 
     public usersListChanged = new Subject<User[]>();
-    public lightUsersListChanged = new Subject<LightUser[]>();
     public closeUsersListModal = new Subject<void>();
     public closeUsersByLocationModal = new Subject<void>();
-    public pagesQuantityChanged = new Subject<number>();
+    public pagesQuantityChanged = new Subject<SavedEntities>();
 
     constructor(
         private http: HttpClient,
         private cookieService: CookieService) {
-        const rpp = this.cookieService.get(this.cookieName);
-        if (rpp) {
-            var o = JSON.parse(rpp);
+        const savedEntitiesJson = this.cookieService.get(this.cookieName);
+        if (savedEntitiesJson) {
+            var o = JSON.parse(savedEntitiesJson);
             if (o.rowsPerPage) {
                 this.savedEntities = o;
+                this.pagesQuantity = this.savedEntities.pagesQuantity;
                 this.rowsPerPage = this.savedEntities.rowsPerPage;
                 this.currPage = this.savedEntities.currPage;
             }
@@ -57,12 +57,16 @@ export class UserService {
     }
 
     saveSavedEntities() {
-        this.savedEntities = new SavedEntities(this.rowsPerPage, this.currPage);
-        this.cookieService.put(this.cookieName, JSON.stringify(this.savedEntities));
+        const o = new SavedEntities();
+        o.pagesQuantity = this.pagesQuantity;
+        o.rowsPerPage = this.rowsPerPage;
+        o.currPage = this.currPage;
+        this.cookieService.put(this.cookieName, JSON.stringify(o));
     }
 
     setCurrPage(cp: number) {
         this.currPage = cp || cp === 0 ? cp : this.currPage;
+        this.saveSavedEntities();
         this.fillCurrUsers();
         this.usersListChanged.next(this.currUsers);
         this.setPagedUsers();
@@ -70,27 +74,18 @@ export class UserService {
 
     setPagesQuantity() {
         this.pagesQuantity = Math.ceil(this.users.length / this.rowsPerPage);
-        const pq = this.pagesQuantity;
         this.saveSavedEntities();
-        this.pagesQuantityChanged.next(pq);
+        const o = new SavedEntities();
+        o.pagesQuantity = this.pagesQuantity;
+        o.currPage = this.init ? this.currPage : 0;
+        o.rowsPerPage = this.rowsPerPage;
+        this.pagesQuantityChanged.next(o);
     }
 
     setRowsPerPage(rpp: number) {
         this.rowsPerPage = rpp;
         this.cookieService.put(this.cookieName, this.rowsPerPage.toString());
         this.setPagedUsers();
-    }
-
-    readLightData() {//There is no reason to use light data, because there is no DB
-        this.http.get<LightUser[]>(this.usersPath)
-            .subscribe((data) => {
-                this.lightUsers = data;
-                this.lightUsersListChanged.next(data);
-            },
-                (error) => {
-                    console.log('Error: ', error);
-                }
-            );
     }
 
     readAllData() {
@@ -149,7 +144,7 @@ export class UserService {
         this.users.map((user: User) => {
             user.cars = [];
             this.cars.map((car: Car) => {
-                if (car.userIndex === user.userIndex) {
+                if (car.userIndex.indexOf(user.userIndex) >=0) {
                     user.cars.push(car);
                 }
             });
@@ -171,6 +166,9 @@ export class UserService {
     }
 
     fillCurrUsers() {
+        if(!this.pagedUsers || $.isEmptyObject(this.pagedUsers)){
+            this.fillPagedUsers();
+        }
         this.currPage = this.currPage > Object.keys(this.pagedUsers).length - 1 ? 0 : this.currPage;
         this.currUsers = this.pagedUsers[this.currPage];
     }

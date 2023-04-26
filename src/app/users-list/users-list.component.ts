@@ -1,11 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserService } from '../service/user.service';
 import { Location } from '../models/location.model';
 import { Car } from '../models/car.model';
-
-//declare var $: any;
 
 @Component({
   selector: 'app-users-list',
@@ -18,13 +16,16 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
   public sort: string = '-fullName';
   public showDetailes: boolean = false;
   public selectedUser: User;
-  public locations: string[] = [];
   public selectedUsersByLocation: User[] = [];
   public showUsersByLocation: boolean = false;
   private activatedUsersListChanged: Subscription;
   private activatedCloseUsersListModal: Subscription;
   private activatedCloseUsersByLocationModal: Subscription;
+  public selectedLocationLatLng: string;
+  public selectedLocationImg: string;
 
+  @Input() locationLatLngs: string[];
+  @Input() locationImg: string;
   @ViewChild('vilon') vilon: ElementRef;
 
   constructor(private userService: UserService) { }
@@ -33,11 +34,11 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activatedUsersListChanged =
       this.userService.usersListChanged.subscribe(
         (list: User[]) => {
-          if(!list){
+          if (!list) {
             return;
           }
           this.users = list;
-          this.locations = [];
+          this.locationLatLngs = [];
           let locs: string[] = [];
           this.userService.locations.map((location: Location) => {
             if (locs.indexOf(location.locationLatLng) < 0) {
@@ -46,14 +47,14 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
           });
           this.users.map((user: User) => {
             user.cars.map((car: Car) => {
-              car.locations.map((loc: Location)=>{
-                if(locs.indexOf(loc.locationLatLng) !== -1 && this.locations.indexOf(loc.locationLatLng) === -1){
-                  this.locations.push(loc.locationLatLng);
+              car.locations.map((loc: Location) => {
+                if (locs.indexOf(loc.locationLatLng) !== -1 && this.locationLatLngs.indexOf(loc.locationLatLng) === -1) {
+                  this.locationLatLngs.push(loc.locationLatLng);
                 }
               })
             })
           });
-          this.locations.sort();
+          this.locationLatLngs.sort();
         }
       );
 
@@ -95,10 +96,12 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   searchUsersByLocation(locationLatLng: string) {
+    this.selectedLocationLatLng = locationLatLng;
     this.users.map((user: User) => {
       user.cars.map((car: Car) => {
         car.locations.map((location: Location) => {
           if (locationLatLng === location.locationLatLng) {
+            this.selectedLocationImg = location.img;
             this.selectedUsersByLocation.push(user);
           }
         })

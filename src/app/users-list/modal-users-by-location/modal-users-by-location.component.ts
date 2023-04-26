@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Car } from '../../models/car.model';
 import { Location } from '../../models/location.model';
 import { UserService } from '../../service/user.service';
-import { CarLocationUsers } from '../../models/car-location-users.model';
+
 
 @Component({
   selector: 'app-modal-users-by-location',
@@ -14,11 +14,17 @@ export class ModalUsersByLocationComponent implements OnInit {
 
   private users: User[];
   public selectedLocation: string;
-  public selectedLocationImg: string;
   public selected: string;
   public carLocationUsers: any;
   public keys: string[];
   public bigImg: boolean = false;
+  public carsUsersDates: any;
+  private prevCarNumber: string = '0';
+
+  @Input() selectedocationLatLngs: string[];
+  @Input() selectedLocationLatLng: string;
+  @Input() selectedLocationImg: string;
+  @Input() selectedUsersByLocation: User[];
 
   constructor(private userService: UserService) { }
 
@@ -31,38 +37,50 @@ export class ModalUsersByLocationComponent implements OnInit {
     this.userService.closeUsersListModal.next();
   }
 
-  showBigImg(set: boolean){
+  showBigImg(set: boolean, evt: any = null) {
+    if(evt){
+      evt.stopPropagation();
+    }
     this.bigImg = set;
   }
 
   fillCarLocationUsers() {
-    this.carLocationUsers = {};
-    this.users.map((user: User) => {
+
+    this.carsUsersDates = {}
+    this.userService.locations.map((loc: Location) => {
+      if (loc.locationLatLng === this.selectedLocationLatLng) {
+        if (!this.carsUsersDates.hasOwnProperty(loc.carNumber)) {
+          this.carsUsersDates[loc.carNumber] = {};
+          this.carsUsersDates[loc.carNumber].users = [];
+          this.carsUsersDates[loc.carNumber].dates = [];
+        }
+        this.carsUsersDates.carNumber = loc.carNumber;
+        this.carsUsersDates[loc.carNumber].dates.push(loc.dateTime);
+      }
+    })
+
+    this.userService.currUsers.map((user: User) => {
       user.cars.map((car: Car) => {
-        const clu = new CarLocationUsers();
-        clu.userNames = [];
-        clu.visitDates = [];
-        clu.carNumber = car.carNumber;
-        if (clu.userNames.indexOf(user.fullName) < 0) {
-          clu.userNames.push(user.fullName);
+        if (this.carsUsersDates.hasOwnProperty(car.carNumber) && this.carsUsersDates[car.carNumber].users.indexOf(user.fullName) === -1) {
+          this.carsUsersDates[car.carNumber].users.push(user.fullName);
         }
-        clu.locationLatLng = car.locations[0].locationLatLng;
-        clu.locationImg = car.locations[0].img;
+      })
+    })
+  }
 
-        car.locations.map((location: Location) => {
-          if (clu.visitDates.indexOf(location.dateTime) < 0) {
-            clu.visitDates.push(location.dateTime);
-          }
-        })
+  getUsers(carUsersDates: any) {
+    let users: [] = carUsersDates.value.users;
+    return users;
+  }
 
-        if (!this.carLocationUsers.hasOwnProperty(car.carNumber)) {
-          this.carLocationUsers[car.carNumber] = [];
-        }
-        this.carLocationUsers[car.carNumber].push(clu);
-      });
-    });
-    this.keys = Object.keys(this.carLocationUsers);
-    this.selectedLocation = this.carLocationUsers[this.keys[0]][0].locationLatLng;
-    this.selectedLocationImg = this.carLocationUsers[this.keys[0]][0].locationImg;
+  getDates(carUsersDates: any) {
+    let dates: [] = carUsersDates.value.dates;
+    return dates;
+  }
+
+  showCar(carNumber: string) {
+    let response = carNumber === this.prevCarNumber ? '' : carNumber;
+    this.prevCarNumber = carNumber;
+    return response;
   }
 }

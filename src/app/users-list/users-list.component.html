@@ -11,8 +11,8 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                    <li *ngFor="let location of locations"><a ngbDropdownItem href="#" role="button"
-                            (click)="searchUsersByLocation(location)">{{location}}</a></li>
+                    <li *ngFor="let locationName of locationLatLngs"><a ngbDropdownItem href="#" role="button"
+                            (click)="searchUsersByLocation(locationName)">{{locationName}}</a></li>
                 </ul>
             </div>
         </div>
@@ -48,5 +48,15 @@
 </table>
 
 <div id="dVilon" #vilon (click)="hideModals()"></div>
-<app-modal *ngIf="showDetailes" [user]="selectedUser"></app-modal>
-<app-modal-users-by-location *ngIf="showUsersByLocation"></app-modal-users-by-location>
+
+<app-modal 
+*ngIf="showDetailes" 
+[user]="selectedUser"
+></app-modal>
+
+<app-modal-users-by-location 
+*ngIf="showUsersByLocation"
+[selectedLocationLatLng] = "selectedLocationLatLng"
+[selectedLocationImg] = "selectedLocationImg"
+[selectedUsersByLocation] = "selectedUsersByLocation"
+></app-modal-users-by-location>

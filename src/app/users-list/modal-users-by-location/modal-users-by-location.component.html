@@ -9,7 +9,7 @@
                         <b>Location:</b>
                     </div>
                     <div class="col-md-9">
-                        <div class="pull-left"><b>{{selectedLocation}}</b></div>
+                        <div class="pull-left"><b>{{selectedLocationLatLng}}</b></div>
                     </div>
                 </div>
                 <br />
@@ -18,39 +18,24 @@
                     (mouseover)="showBigImg(true)">
             </div>
             <div class="col-md-6">
-                <div *ngFor="let key of keys; index as k">
-                    <table class="table table-striped table-bordered table-sm table-hover">
-                        <thead *ngIf="k===0">
-                            <th>Car number</th>
-                            <th>Users</th>
-                            <th>Visit dates</th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of carLocationUsers[key]; index as i">
-                                <td>
-                                    {{i===0?item.carNumber:''}}
-                                </td>
-                                <td>
-                                    <div *ngFor="let userName of item.userNames; index as j">
-                                        {{i===0?userName:''}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div *ngFor="let visitDate of item.visitDates">
-                                        {{visitDate}}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead>
+                        <th>CARS</th>
+                        <th>USERS</th>
+                        <th>VISIT DATES</th>
+                    </thead>
+                    <tr *ngFor="let carUsersDates of carsUsersDates | keyvalue">
+                        <td>{{carUsersDates.key}}</td>
+                        <td>
+                            <div *ngFor="let userFullName of getUsers(carUsersDates)">{{userFullName}}</div>
+                        </td>
+                        <td>
+                            <div *ngFor="let date of getDates(carUsersDates)">{{date}}</div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
-    <img 
-        *ngIf="bigImg" 
-        [src]="selectedLocationImg" 
-        alt="" 
-        class="img-responsive big-img" 
-        (mouseout)="showBigImg(false)">
 </div>
+<img *ngIf="bigImg" [src]="selectedLocationImg" alt="" class="img-responsive big-img" (click)="showBigImg(false,$event)" (mouseout)="showBigImg(false)">

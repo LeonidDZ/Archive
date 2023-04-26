@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { SavedEntities } from 'src/app/models/saved-entities.model';
 import { UserService } from 'src/app/service/user.service';
 
 declare var $: any;
@@ -25,18 +26,19 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.activatedPagesQuantityChanged =
-    this.userService.pagesQuantityChanged.subscribe((pq: number) => {
-      this.pagesQuantity = pq;
-      this.rowsPerPage = this.userService.rowsPerPage;
-      this.setRowsPerPage(this.rowsPerPage);
-      this.currPage = 0;
-    });
+      this.userService.pagesQuantityChanged.subscribe((o: SavedEntities) => {
+        this.pagesQuantity = o.pagesQuantity;
+        this.rowsPerPage = o.rowsPerPage;
+        this.currPage = o.currPage;
+        this.setRowsPerPage(this.rowsPerPage);
+        this.currPage = this.userService.currPage;
+      });
     this.setCurrPage(this.userService.currPage);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.activatedPagesQuantityChanged.unsubscribe();
   }
 
@@ -56,13 +58,25 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setBtnStyles();
   }
 
-  setBtnStyles(){
+  setBtnStyles() {
     $('li>a').removeClass('success');
     $('li').each((indx: number) => {
-      if(indx === this.currPage){
-      $('#li' + indx + '>a').addClass('success');
+      if (indx === this.currPage) {
+        this.forceSetBtnStyle(this.currPage);
       }
     })
+  }
+  
+  forceSetBtnStyle(indx: number){
+    var el = $('#li' + indx + '>a');
+    if (el.length === 0 || !el) {
+      setTimeout(() => {
+        this.forceSetBtnStyle(indx);
+      }, 100);
+    }
+    else {
+      $(el).addClass('success');
+    }
   }
 
   updateCurrPage(indx: number) {
