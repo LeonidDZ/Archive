@@ -144,7 +144,7 @@ export class UserService {
         this.users.map((user: User) => {
             user.cars = [];
             this.cars.map((car: Car) => {
-                if (car.userIndex.indexOf(user.userIndex) >=0) {
+                if (car.userIndex.indexOf(user.userIndex) >= 0) {
                     user.cars.push(car);
                 }
             });
@@ -166,10 +166,12 @@ export class UserService {
     }
 
     fillCurrUsers() {
-        if(!this.pagedUsers || $.isEmptyObject(this.pagedUsers)){
+        if (!this.pagedUsers || $.isEmptyObject(this.pagedUsers)) {
             this.fillPagedUsers();
         }
-        this.currPage = this.currPage > Object.keys(this.pagedUsers).length - 1 ? 0 : this.currPage;
-        this.currUsers = this.pagedUsers[this.currPage];
+        else {
+            this.currPage = this.currPage > Object.keys(this.pagedUsers).length - 1 ? 0 : this.currPage;
+            this.currUsers = this.pagedUsers[this.currPage];
+        }
     }
 }

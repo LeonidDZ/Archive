@@ -18,6 +18,7 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   public currPage: number = 0;
   public rowsPerPage: number = 10;
   private cookieName: string = 'savedRowsPerPageNumber';
+  private btnsReady: boolean = false;
   private activatedPagesQuantityChanged: Subscription;
 
   constructor(
@@ -54,8 +55,10 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   setCurrPage(indx: number) {
     this.currPage = indx;
     this.setButtons(indx);
-    this.userService.setCurrPage(this.currPage);
     this.setBtnStyles();
+    if (this.btnsReady) {
+      this.userService.setCurrPage(this.currPage);
+    }
   }
 
   setBtnStyles() {
@@ -66,8 +69,8 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     })
   }
-  
-  forceSetBtnStyle(indx: number){
+
+  forceSetBtnStyle(indx: number) {
     var el = $('#li' + indx + '>a');
     if (el.length === 0 || !el) {
       setTimeout(() => {
@@ -76,6 +79,8 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     else {
       $(el).addClass('success');
+      this.currPage = indx;
+      this.btnsReady = true;
     }
   }
 
@@ -94,5 +99,9 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   getColor(i: number) {
     let style = i === this.rowsPerPage - 1 ? 'font-weight:bold;color:red;' : 'font-weight:regular;color:black;';
     return style;
+  }
+
+  liReady(evt: any){
+    var a= evt;
   }
 }
