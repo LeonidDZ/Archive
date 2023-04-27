@@ -97,11 +97,14 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchUsersByLocation(locationLatLng: string) {
     this.selectedLocationLatLng = locationLatLng;
+    this.selectedLocationImg = '';
     this.users.map((user: User) => {
       user.cars.map((car: Car) => {
         car.locations.map((location: Location) => {
-          if (locationLatLng === location.locationLatLng) {
-            this.selectedLocationImg = location.img;
+          if (location.locationLatLng === this.selectedLocationLatLng) {
+            if (this.selectedLocationImg === '') {
+              this.selectedLocationImg = location.img;
+            }
             this.selectedUsersByLocation.push(user);
           }
         })
