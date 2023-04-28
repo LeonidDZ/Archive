@@ -55,20 +55,57 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   setCurrPage(indx: number) {
     this.currPage = indx;
     this.setButtons(indx);
-    this.setBtnStyles();
-    if (this.btnsReady) {
-      this.userService.setCurrPage(this.currPage);
+    this.waitForButtonExists(this.currPage);
+    // this.setBtnStyles();
+    // if (this.btnsReady) {
+    //   this.userService.setCurrPage(this.currPage);
+    // }
+  }
+
+  setCurrPage_continue(el: any) {
+    this.btnsReady = true;
+    $('li>a').removeClass('success');
+    $(el).addClass('success');
+    this.btnsReady = true;
+    //this.setBtnStyles(el);
+    this.userService.setCurrPage(this.currPage);
+  }
+
+  waitForButtonExists(currPage: number) {
+    var lis = $('li');
+    if (lis.length - 1 < currPage) {
+      setTimeout(this.waitForButtonExists, 100, currPage);
+    }
+    else {
+      $('li').each((indx: number) => {
+        if (indx === currPage) {
+          var el = $('#li' + indx + '>a');
+          if (el.length === 0 || !el) {
+            setTimeout(this.waitForButtonExists, 100, indx);
+            return false;
+          }
+          else {
+            this.setCurrPage_continue(el);
+            return false;
+          }
+        }
+        return true;
+      })
     }
   }
 
-  setBtnStyles() {
-    $('li>a').removeClass('success');
-    $('li').each((indx: number) => {
-      if (indx === this.currPage) {
-        this.forceSetBtnStyle(this.currPage);
-      }
-    })
-  }
+  // setBtnStyles(el: any) {
+  //   // $('li>a').removeClass('success');
+  //   // $('li').each((indx: number) => {
+  //     // if (indx === this.currPage) {
+  //       $(el).addClass('success');
+  //     // this.currPage = indx;
+  //     //this.btnsReady = true;
+  //     this.userService.setCurrPage(this.currPage);
+  //     //this.forceSetBtnStyle(this.currPage);
+  //     // }
+  //   })
+  // }
 
   forceSetBtnStyle(indx: number) {
     var el = $('#li' + indx + '>a');
@@ -81,6 +118,7 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
       $(el).addClass('success');
       this.currPage = indx;
       this.btnsReady = true;
+      this.userService.setCurrPage(this.currPage);
     }
   }
 
@@ -99,9 +137,5 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   getColor(i: number) {
     let style = i === this.rowsPerPage - 1 ? 'font-weight:bold;color:red;' : 'font-weight:regular;color:black;';
     return style;
-  }
-
-  liReady(evt: any){
-    var a= evt;
   }
 }

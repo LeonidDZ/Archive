@@ -23,7 +23,7 @@
                         </a>
                     </li>
 
-                    <li *ngFor="let indx of [].constructor(pagesQuantity); let i = index" id="li{{i}}" class="page-item" (load)="liReady($event)" >
+                    <li *ngFor="let indx of [].constructor(pagesQuantity); let i = index" id="li{{i}}" class="page-item">
                         <a class="page-link" href="#" role="button" (click)="setCurrPage(i)">{{i+1}}</a>
                     </li>
                     <li class="page-item">
