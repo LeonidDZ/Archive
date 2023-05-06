@@ -13,6 +13,7 @@ declare var $: any;
 export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('rowsPerPageSelector') rowsPerPageSelector: ElementRef;
+
   public pagesQuantity: number = 5;
   public pageNumbers: number[];
   public currPage: number = 0;
@@ -20,6 +21,7 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   private cookieName: string = 'savedRowsPerPageNumber';
   private btnsReady: boolean = false;
   private activatedPagesQuantityChanged: Subscription;
+  
 
   constructor(
     private userService: UserService) { }
@@ -36,7 +38,7 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setRowsPerPage(this.rowsPerPage);
         this.currPage = this.userService.currPage;
       });
-    this.setCurrPage(this.userService.currPage);
+    // this.setCurrPage(this.userService.currPage);
   }
 
   ngOnDestroy() {

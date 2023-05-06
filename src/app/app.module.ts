@@ -13,6 +13,7 @@ import { UsersListComponent } from './users-list/users-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalUsersByLocationComponent } from './users-list/modal-users-by-location/modal-users-by-location.component';
 import { PaginatorComponent } from './users-list/paginator/paginator.component';
+import { FffComponent } from './fff/fff.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { PaginatorComponent } from './users-list/paginator/paginator.component';
     UsersListComponent,
     OrderBy,
     ModalUsersByLocationComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    FffComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,8 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "types":[
-    "jquery"
+    "jquery",
+    "jest"
     ],
     "forceConsistentCasingInFileNames": true,
     "strict": true,
