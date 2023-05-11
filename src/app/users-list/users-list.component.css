@@ -11,3 +11,25 @@ th {
     top: 0px;
     opacity: .8;
 }
+
+.ag-theme-alpine {
+    --ag-background-color: #ddd;
+ }
+ 
+ .ag-theme-alpine .ag-header-cell-label {
+    font-style: italic;
+ }
+ 
+ .ag-theme-alpine {
+    --ag-foreground-color: var(--appMainTextColor);
+    --ag-foreground-color: #000;
+    --ag-data-color: var(--ag-foreground-color);
+ 
+    --ag-grid-size: 4px;
+    --ag-cell-horizontal-padding: calc(var(--ag-grid-size) * 3);
+    --ag-header-height: var(--ag-row-height);
+ }
+
+ .ag-header-cell{
+    float: left;
+ }

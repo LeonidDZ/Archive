@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserService } from '../service/user.service';
 import { Location } from '../models/location.model';
 import { Car } from '../models/car.model';
+import { ColDef } from 'ag-grid-community'; 
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-users-list',
@@ -24,6 +26,18 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectedLocationLatLng: string;
   public selectedLocationImg: string;
 
+  public columnDefs: ColDef[] = [
+    { field: 'fullName' },
+    { field: 'phoneNumber' },
+    { field: 'birthday' }
+  ]
+  public defaultColDef: ColDef = {
+    // sortable: true,
+    // filter: true
+  }
+  public rowData: User[] = [];
+  @ViewChild(AgGridAngular) agGrid: AgGridAngular;
+
   @Input() locationLatLngs: string[];
   @Input() locationImg: string;
   @ViewChild('vilon') vilon: ElementRef;
@@ -38,6 +52,7 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
           }
           this.users = list;
+          this.rowData = this.users;
           this.locationLatLngs = [];
           let locs: string[] = [];
           this.userService.locations.map((location: Location) => {

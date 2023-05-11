@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { OrderBy } from './globals/orderBy.pipe';
 import { CookieModule } from 'ngx-cookie';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,7 +14,6 @@ import { UsersListComponent } from './users-list/users-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalUsersByLocationComponent } from './users-list/modal-users-by-location/modal-users-by-location.component';
 import { PaginatorComponent } from './users-list/paginator/paginator.component';
-import { FffComponent } from './fff/fff.component';
 
 
 @NgModule({
@@ -24,8 +24,7 @@ import { FffComponent } from './fff/fff.component';
     UsersListComponent,
     OrderBy,
     ModalUsersByLocationComponent,
-    PaginatorComponent,
-    FffComponent
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +32,8 @@ import { FffComponent } from './fff/fff.component';
     HttpClientModule,
     NgbModule,
     CookieModule.withOptions(),
-    FormsModule
+    FormsModule,
+    AgGridModule
   ],
   providers: [],
   bootstrap: [AppComponent]
