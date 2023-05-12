@@ -25,17 +25,6 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
   private activatedCloseUsersByLocationModal: Subscription;
   public selectedLocationLatLng: string;
   public selectedLocationImg: string;
-
-  public columnDefs: ColDef[] = [
-    { field: 'fullName' },
-    { field: 'phoneNumber' },
-    { field: 'birthday' }
-  ]
-  public defaultColDef: ColDef = {
-    // sortable: true,
-    // filter: true
-  }
-  public rowData: User[] = [];
   @ViewChild(AgGridAngular) agGrid: AgGridAngular;
 
   @Input() locationLatLngs: string[];
@@ -52,7 +41,6 @@ export class UsersListComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
           }
           this.users = list;
-          this.rowData = this.users;
           this.locationLatLngs = [];
           let locs: string[] = [];
           this.userService.locations.map((location: Location) => {

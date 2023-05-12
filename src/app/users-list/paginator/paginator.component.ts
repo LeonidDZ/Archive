@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SavedEntities } from 'src/app/models/saved-entities.model';
 import { UserService } from 'src/app/service/user.service';
@@ -10,7 +10,9 @@ declare var $: any;
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.css']
 })
-export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PaginatorComponent implements OnInit, OnDestroy {
+
+  self: PaginatorComponent = this;
 
   @ViewChild('rowsPerPageSelector') rowsPerPageSelector: ElementRef;
 
@@ -18,18 +20,14 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
   public pageNumbers: number[];
   public currPage: number = 0;
   public rowsPerPage: number = 10;
-  private cookieName: string = 'savedRowsPerPageNumber';
-  private btnsReady: boolean = false;
   private activatedPagesQuantityChanged: Subscription;
-  
+  public elementReady: boolean = false;
+
 
   constructor(
     private userService: UserService) { }
-
+    
   ngOnInit() {
-  }
-
-  ngAfterViewInit() {
     this.activatedPagesQuantityChanged =
       this.userService.pagesQuantityChanged.subscribe((o: SavedEntities) => {
         this.pagesQuantity = o.pagesQuantity;
@@ -38,7 +36,6 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setRowsPerPage(this.rowsPerPage);
         this.currPage = this.userService.currPage;
       });
-    // this.setCurrPage(this.userService.currPage);
   }
 
   ngOnDestroy() {
@@ -52,76 +49,19 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userService.setPagesQuantity();
     }
     this.pagesQuantity = this.userService.pagesQuantity;
+    this.setCurrPage(this.currPage);
   }
-
+  
   setCurrPage(indx: number) {
     this.currPage = indx;
-    this.setButtons(indx);
-    this.waitForButtonExists(this.currPage);
-    // this.setBtnStyles();
-    // if (this.btnsReady) {
-    //   this.userService.setCurrPage(this.currPage);
-    // }
-  }
-
-  setCurrPage_continue(el: any) {
-    this.btnsReady = true;
-    $('li>a').removeClass('success');
-    $(el).addClass('success');
-    this.btnsReady = true;
-    //this.setBtnStyles(el);
     this.userService.setCurrPage(this.currPage);
+    setTimeout(this.setButtonsStyle, 100, this.currPage);
   }
 
-  waitForButtonExists(currPage: number) {
-    var lis = $('li');
-    if (lis.length - 1 < currPage) {
-      setTimeout(this.waitForButtonExists, 100, currPage);
-    }
-    else {
-      $('li').each((indx: number) => {
-        if (indx === currPage) {
-          var el = $('#li' + indx + '>a');
-          if (el.length === 0 || !el) {
-            setTimeout(this.waitForButtonExists, 100, indx);
-            return false;
-          }
-          else {
-            this.setCurrPage_continue(el);
-            return false;
-          }
-        }
-        return true;
-      })
-    }
-  }
 
-  // setBtnStyles(el: any) {
-  //   // $('li>a').removeClass('success');
-  //   // $('li').each((indx: number) => {
-  //     // if (indx === this.currPage) {
-  //       $(el).addClass('success');
-  //     // this.currPage = indx;
-  //     //this.btnsReady = true;
-  //     this.userService.setCurrPage(this.currPage);
-  //     //this.forceSetBtnStyle(this.currPage);
-  //     // }
-  //   })
-  // }
-
-  forceSetBtnStyle(indx: number) {
-    var el = $('#li' + indx + '>a');
-    if (el.length === 0 || !el) {
-      setTimeout(() => {
-        this.forceSetBtnStyle(indx);
-      }, 100);
-    }
-    else {
-      $(el).addClass('success');
-      this.currPage = indx;
-      this.btnsReady = true;
-      this.userService.setCurrPage(this.currPage);
-    }
+  setButtonsStyle(indx: number) {
+    $('li>a').removeClass('success');
+    $('#li' + indx + '>a').addClass('success');
   }
 
   updateCurrPage(indx: number) {
@@ -130,10 +70,6 @@ export class PaginatorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currPage = this.currPage < 0 ? 0 : this.currPage;
     this.currPage = this.currPage > this.pagesQuantity - 1 ? this.pagesQuantity - 1 : this.currPage;
     this.setCurrPage(this.currPage);
-  }
-
-  setButtons(indx: number) {
-
   }
 
   getColor(i: number) {
