@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, Input } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { UserService } from '../service/user.service';
 import { Location } from '../models/location.model';
 import { Car } from '../models/car.model';
-import { ColDef } from 'ag-grid-community'; 
 import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({

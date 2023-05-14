@@ -21,10 +21,6 @@ export class ModalComponent implements OnInit {
     this.showLocations(firstCar);
   }
 
-  ngOnDestroy(): void {
-    
-  }
-
   showLocations(car: Car) {
     this.locations = car.locations;
   }
